@@ -2,6 +2,7 @@
 import {
   Controller,
   Post,
+  Delete,
   UploadedFile,
   UseInterceptors,
   Get,
@@ -17,19 +18,16 @@ export class FilesController {
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    const response = await this.googleDriveService.uploadFile(file);
-    return {
-      fileId: response.id,
-      webViewLink: response.webViewLink,
-      webContentLink: response.webContentLink,
-    };
+    return await this.googleDriveService.uploadFile(file);
   }
 
-  /*
+  @Delete('delete')
+  async deleteFile(@Query('fileId') fileId: string) {
+    return await this.googleDriveService.deleteFile(fileId);
+  }
+
   @Get('download')
   async downloadFile(@Query('fileId') fileId: string) {
-    const destinationPath = `./downloads/${fileId}`; // adjust path and extension
-    await this.googleDriveService.downloadFile(fileId, destinationPath);
-    return { message: 'File downloaded successfully', path: destinationPath };
-  }*/
+    return await this.googleDriveService.downloadFile(fileId);
+  }
 }

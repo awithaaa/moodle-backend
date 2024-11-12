@@ -5,6 +5,7 @@ import { OAuth2Client } from 'google-auth-library';
 import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs';
 import { Readable } from 'stream';
+import { file } from 'googleapis/build/src/apis/file';
 
 @Injectable()
 export class DriveService {
@@ -27,40 +28,70 @@ export class DriveService {
 
   // Upload a file to Google Drive
   async uploadFile(file: Express.Multer.File) {
-    const fileBuffer = Buffer.from(file.buffer);
-    const fileMetadata = {
-      name: file.originalname,
-      mimeType: file.mimetype,
-    };
+    try {
+      const fileBuffer = Buffer.from(file.buffer);
+      const fileMetadata = {
+        name: file.originalname,
+        mimeType: file.mimetype,
+      };
 
-    const media = {
-      body: Readable.from([fileBuffer]),
-      mimeType: file.mimetype,
-    };
+      const media = {
+        body: Readable.from([fileBuffer]),
+        mimeType: file.mimetype,
+      };
 
-    const response = await this.drive.files.create({
-      requestBody: fileMetadata,
-      media: media,
-      fields: 'id, webViewLink, webContentLink',
-    });
+      const response = await this.drive.files.create({
+        requestBody: fileMetadata,
+        media: media,
+        fields: 'id, webViewLink, webContentLink',
+      });
 
-    return response.data;
+      return {
+        id: response.data.id,
+        link: await this.generatePublicUrl(response.data.id),
+      };
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
-  /*
- //  Download a file from Google Drive
-  async downloadFile(fileId: string, destinationPath: string) {
-    const dest = fs.createWriteStream(destinationPath);
-    const response = await this.drive.files.get(
-      { fileId, alt: 'media' },
-      { responseType: 'stream' },
-    );
+  async deleteFile(fileId: string) {
+    try {
+      const response = await this.drive.files.delete({
+        fileId: fileId,
+      });
+      return {
+        message: 'File Deleted Successfully!',
+      };
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
-    await new Promise((resolve, reject) => {
-      response.data
-        .on('end', () => resolve(true))
-        .on('error', (err) => reject(err))
-        .pipe(dest);
-    });
-  }*/
+  private async makeFilePublic(fileId: string, userEmail: string) {
+    try {
+      return await this.drive.permissions.create({
+        fileId,
+        requestBody: {
+          role: 'reader',
+          type: 'user',
+          emailAddress: userEmail,
+        },
+      });
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
+
+  private async generatePublicUrl(fileId: string) {
+    const res = await this.makeFilePublic(fileId, 'arosha.20231983@iit.ac.lk');
+    return {
+      link: res.data,
+    };
+  }
+
+  //  Download a file from Google Drive
+  async downloadFile(fileId: string) {
+    return await this.generatePublicUrl(fileId);
+  }
 }
