@@ -9,8 +9,10 @@ import {
   Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 import { DriveService } from 'src/utility/drive/drive.service';
 
+@ApiTags('files')
 @Controller('files')
 export class FilesController {
   constructor(private readonly googleDriveService: DriveService) {}

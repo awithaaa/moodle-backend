@@ -23,6 +23,5 @@ model File {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   fileId String @unique
-  webViewLink String
-  webContentLink String 
+  downloadLink String
 }

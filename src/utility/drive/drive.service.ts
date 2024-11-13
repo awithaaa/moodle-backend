@@ -46,6 +46,8 @@ export class DriveService {
         fields: 'id, webViewLink, webContentLink',
       });
 
+      await this.makeFilePublic(response.data.id);
+
       return {
         id: response.data.id,
         link: await this.generatePublicUrl(response.data.id),
@@ -68,14 +70,13 @@ export class DriveService {
     }
   }
 
-  private async makeFilePublic(fileId: string, userEmail: string) {
+  private async makeFilePublic(fileId: string) {
     try {
       return await this.drive.permissions.create({
         fileId,
         requestBody: {
           role: 'reader',
-          type: 'user',
-          emailAddress: userEmail,
+          type: 'anyone',
         },
       });
     } catch (e) {
@@ -83,11 +84,8 @@ export class DriveService {
     }
   }
 
-  private async generatePublicUrl(fileId: string) {
-    const res = await this.makeFilePublic(fileId, 'arosha.20231983@iit.ac.lk');
-    return {
-      link: res.data,
-    };
+  private async generatePublicUrl(fileId: string): Promise<string> {
+    return `https://drive.google.com/uc?export=download&id=${fileId}`;
   }
 
   //  Download a file from Google Drive
