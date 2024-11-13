@@ -26,6 +26,23 @@ export class DriveService {
     this.drive = google.drive({ version: 'v3', auth: this.oauth2Client });
   }
 
+  // list files with their IDS
+  async listFiles(): Promise<{ id: string; name: string }[]> {
+    try {
+      const response = await this.drive.files.list({
+        fields: 'files(id, name)', // Retrieve only the file ID and name
+      });
+
+      return response.data.files.map((file) => ({
+        id: file.id,
+        name: file.name,
+      }));
+    } catch (error) {
+      console.error('Error listing files:', error);
+      throw new Error('Unable to list files');
+    }
+  }
+
   // Upload a file to Google Drive
   async uploadFile(file: Express.Multer.File) {
     try {
@@ -57,6 +74,7 @@ export class DriveService {
     }
   }
 
+  // delete a file in google drive
   async deleteFile(fileId: string) {
     try {
       const response = await this.drive.files.delete({
@@ -70,6 +88,7 @@ export class DriveService {
     }
   }
 
+  // make file to the public
   private async makeFilePublic(fileId: string) {
     try {
       return await this.drive.permissions.create({

@@ -32,4 +32,9 @@ export class FilesController {
   async downloadFile(@Query('fileId') fileId: string) {
     return await this.googleDriveService.downloadFile(fileId);
   }
+
+  @Get('list')
+  async listFiles() {
+    return await this.googleDriveService.listFiles();
+  }
 }
