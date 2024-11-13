@@ -6,13 +6,17 @@ import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs';
 import { Readable } from 'stream';
 import { file } from 'googleapis/build/src/apis/file';
+import { FilesService } from 'src/public/files/files.service';
 
 @Injectable()
 export class DriveService {
   private oauth2Client: OAuth2Client;
   private drive: drive_v3.Drive;
 
-  constructor(private configService: ConfigService) {
+  constructor(
+    private configService: ConfigService,
+    private readonly filesService: FilesService,
+  ) {
     this.oauth2Client = new google.auth.OAuth2(
       this.configService.get('GOOGLE_CLIENT_ID'),
       this.configService.get('GOOGLE_CLIENT_SECRET'),
@@ -63,10 +67,14 @@ export class DriveService {
         fields: 'id, webViewLink, webContentLink',
       });
 
+      const files = await this.filesService.uploadFile({
+        fileId: response.data.id,
+        fileName: file.originalname,
+      });
       await this.makeFilePublic(response.data.id);
 
       return {
-        id: response.data.id,
+        data: files,
         link: await this.generatePublicUrl(response.data.id),
       };
     } catch (error) {
@@ -77,12 +85,9 @@ export class DriveService {
   // delete a file in google drive
   async deleteFile(fileId: string) {
     try {
-      const response = await this.drive.files.delete({
+      return await this.drive.files.delete({
         fileId: fileId,
       });
-      return {
-        message: 'File Deleted Successfully!',
-      };
     } catch (error) {
       console.log(error.message);
     }

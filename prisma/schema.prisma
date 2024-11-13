@@ -23,5 +23,5 @@ model File {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   fileId String @unique
-  downloadLink String
+  fileName String
 }

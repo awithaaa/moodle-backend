@@ -11,11 +11,15 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { DriveService } from 'src/utility/drive/drive.service';
+import { FilesService } from './files.service';
 
 @ApiTags('files')
 @Controller('files')
 export class FilesController {
-  constructor(private readonly googleDriveService: DriveService) {}
+  constructor(
+    private readonly googleDriveService: DriveService,
+    private readonly filesService: FilesService,
+  ) {}
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
@@ -25,7 +29,7 @@ export class FilesController {
 
   @Delete('delete')
   async deleteFile(@Query('fileId') fileId: string) {
-    return await this.googleDriveService.deleteFile(fileId);
+    return await this.filesService.deleteFile(fileId);
   }
 
   @Get('download')
