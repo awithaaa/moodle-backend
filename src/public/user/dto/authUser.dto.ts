@@ -1,4 +1,3 @@
-import { Role } from '@prisma/client';
 import { IsEmail, IsOptional, IsString } from 'class-validator';
 import { Dto } from 'src/lib/dto/Dto';
 
@@ -19,5 +18,5 @@ export class AuthUserDto extends Dto<AuthUserDto> {
 
   @IsString()
   @IsOptional()
-  role?: Role;
+  role?: string;
 }

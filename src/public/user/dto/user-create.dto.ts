@@ -1,4 +1,3 @@
-import { Role } from '@prisma/client';
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Dto } from 'src/lib/dto/Dto';
 
@@ -12,12 +11,12 @@ export class CreateUserDto extends Dto<CreateUserDto> {
   password: string;
 
   @IsString()
-  firstName?: string;
+  firstName: string;
 
   @IsString()
-  lastName?: string;
+  lastName: string;
 
   @IsString()
   @IsOptional()
-  role?: Role;
+  role: string;
 }
