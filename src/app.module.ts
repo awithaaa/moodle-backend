@@ -4,6 +4,7 @@ import { DriveModule } from './utility/drive/drive.module';
 import { FilesModule } from './public/files/files.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './public/user/user.module';
+import { MailModule } from './utility/mail/mail.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { UserModule } from './public/user/user.module';
     FilesModule,
     AuthModule,
     UserModule,
+    MailModule,
   ],
   controllers: [],
   providers: [],
