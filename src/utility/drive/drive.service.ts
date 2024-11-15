@@ -1,5 +1,5 @@
 // google.drive.service.ts
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { google, drive_v3 } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 import { ConfigService } from '@nestjs/config';
@@ -14,8 +14,9 @@ export class DriveService {
   private drive: drive_v3.Drive;
 
   constructor(
+    @Inject(forwardRef(() => FilesService))
+    private filesService: FilesService,
     private configService: ConfigService,
-    private readonly filesService: FilesService,
   ) {
     this.oauth2Client = new google.auth.OAuth2(
       this.configService.get('GOOGLE_CLIENT_ID'),

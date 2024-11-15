@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UploadFileDto } from './dto/uploadfile.dto';
 import { DriveService } from 'src/utility/drive/drive.service';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
@@ -6,17 +11,18 @@ import { PrismaService } from 'src/lib/prisma/prisma.service';
 @Injectable()
 export class FilesService {
   constructor(
-    private readonly prismaService: PrismaService,
+    @Inject(forwardRef(() => DriveService))
     private readonly googleDriveService: DriveService,
+    private readonly prismaService: PrismaService,
   ) {}
 
   // Upload file to the storage and save it in db
   async uploadFile(dto: UploadFileDto) {
     try {
       const file = await this.prismaService.file.create({
-        data: { ...dto },
+        data: { fileId: dto.fileId, fileName: dto.fileName },
       });
-      return { message: 'File Saved Successfully!', data: file };
+      return file;
     } catch (error) {
       console.log(error);
     }
