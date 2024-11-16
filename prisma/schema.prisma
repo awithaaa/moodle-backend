@@ -25,3 +25,11 @@ model File {
   fileId String @unique
   fileName String
 }
+
+model Course {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  courseName String
+  details Json?
+}

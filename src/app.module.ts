@@ -6,6 +6,7 @@ import { MailModule } from './utility/mail/mail.module';
 import { PrismaModule } from './lib/prisma/prisma.module';
 import { DriveModule } from './utility/drive/drive.module';
 import { FilesModule } from './public/files/files.module';
+import { CoursesModule } from './public/course/courses.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { FilesModule } from './public/files/files.module';
     PrismaModule,
     DriveModule,
     FilesModule,
+    CoursesModule,
   ],
   controllers: [],
   providers: [],
