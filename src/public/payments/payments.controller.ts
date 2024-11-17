@@ -21,7 +21,7 @@ export class PaymentsController {
   @Get('user')
   async getLastPaymentByUserId(
     @Query('id') id: number,
-    @Query('month') month: string,
+    @Query('month') month: number,
   ) {
     return await this.paymentsService.getLastPaymentByUserId(id, month);
   }

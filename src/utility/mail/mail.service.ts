@@ -24,7 +24,7 @@ export class MailService {
     try {
       const { to, subject, html, text } = dto;
       const mailOptions = {
-        from: this.configService.get('SMTP_USER'),
+        from: this.configService.get('EMAIL_USER'),
         to,
         subject,
         text,

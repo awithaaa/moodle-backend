@@ -40,7 +40,7 @@ export class PaymentsService {
     return await this.prismaService.payment.findMany({});
   }
 
-  async getLastPaymentByUserId(id: number, month: string) {
+  async getLastPaymentByUserId(id: number, month: number) {
     // Find User
     const user = await this.userService.findById(id);
     if (!user) throw new NotFoundException('User not found!');
