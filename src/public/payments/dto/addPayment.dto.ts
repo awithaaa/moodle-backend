@@ -12,8 +12,8 @@ export class AddPaymentDto extends Dto<AddPaymentDto> {
   courseId: number;
 
   @ApiProperty()
-  @IsString()
-  month: string;
+  @IsNumber()
+  month: number;
 
   @ApiProperty()
   @IsNumber()

@@ -54,7 +54,7 @@ model Payment {
   createdAt DateTime @default(now())
   userId Int
   courseId Int
-  month String
+  month Int
   paymentAmount Float
 
   user User @relation(fields: [userId], references: [id])
