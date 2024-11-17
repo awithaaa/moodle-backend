@@ -17,6 +17,7 @@ model User {
   password String
   role String @default("Student")
 
+  payments Payment[]
   UserCourse UserCourse[]
 }
 
@@ -46,4 +47,15 @@ model UserCourse {
 
   user User @relation(fields: [userId], references: [id])
   course Course @relation(fields: [courseId], references: [id])
+}
+
+model Payment {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  userId Int
+  courseId Int
+  month String
+  paymentAmount Float
+
+  user User @relation(fields: [userId], references: [id])
 }

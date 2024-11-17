@@ -7,6 +7,7 @@ import { PrismaModule } from './lib/prisma/prisma.module';
 import { DriveModule } from './utility/drive/drive.module';
 import { FilesModule } from './public/files/files.module';
 import { CoursesModule } from './public/course/courses.module';
+import { PaymentsModule } from './public/payments/payments.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { CoursesModule } from './public/course/courses.module';
     DriveModule,
     FilesModule,
     CoursesModule,
+    PaymentsModule,
   ],
   controllers: [],
   providers: [],
