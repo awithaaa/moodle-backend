@@ -24,6 +24,14 @@ export class CoursesService {
     return courses;
   }
 
+  async getCourseById(id: number) {
+    const course = await this.prismaService.course.findUnique({
+      where: { id: id },
+    });
+    if (!course) throw new NotFoundException('Course not found!');
+    return course;
+  }
+
   async deleteCourse(id: number) {
     const course = await this.prismaService.course.findUnique({
       where: { id: id },

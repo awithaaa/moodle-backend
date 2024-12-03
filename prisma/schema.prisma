@@ -17,6 +17,7 @@ model User {
   password String
   role String @default("Student")
 
+  student Student?
   payments Payment[]
   UserCourse UserCourse[]
 }
@@ -58,4 +59,29 @@ model Payment {
   paymentAmount Float
 
   user User @relation(fields: [userId], references: [id])
+}
+
+model Student {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  courseLevel String
+  address String
+  gender String
+  dateOfBirth String
+  phoneNumber String
+  userId Int @unique
+  createdBy Int
+
+  user User @relation(fields: [userId], references: [id])
+  
+}
+
+model StudentRegisterToken {
+  id String @id
+  createdAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  studentId Int?
+  onSubmit Boolean @default(false)
+  createdBy Int
 }

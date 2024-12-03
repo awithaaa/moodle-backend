@@ -8,6 +8,7 @@ import { DriveModule } from './utility/drive/drive.module';
 import { FilesModule } from './public/files/files.module';
 import { CoursesModule } from './public/course/courses.module';
 import { PaymentsModule } from './public/payments/payments.module';
+import { StudentsModule } from './public/students/students.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PaymentsModule } from './public/payments/payments.module';
     FilesModule,
     CoursesModule,
     PaymentsModule,
+    StudentsModule,
   ],
   controllers: [],
   providers: [],

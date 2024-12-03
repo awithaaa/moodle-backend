@@ -22,6 +22,11 @@ export class CoursesController {
     return await this.courseService.getAllCourses();
   }
 
+  @Get('id')
+  async getCourseById(@Query('id') id: number) {
+    return await this.courseService.getCourseById(id);
+  }
+
   @Post('add')
   async addCourse(@Body() dto: AddCourseDto) {
     return await this.courseService.addCourse(dto);
