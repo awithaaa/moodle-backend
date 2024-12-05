@@ -1,7 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { StudentsService } from './students.service';
 import { AddStudentDto } from './dto/add-student.dto';
 import { AddTokenDto } from './dto/add-token.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 @Controller('students')
 export class StudentsController {
@@ -13,8 +22,9 @@ export class StudentsController {
   }
 
   @Post('token')
-  async createToken(@Body() dto: AddTokenDto) {
-    return await this.studentsService.createStudentRegisterToken(dto);
+  @UseGuards(JwtAuthGuard)
+  async createToken(@Body('createdBy') createdBy: number) {
+    return await this.studentsService.createStudentRegisterToken(createdBy);
   }
 
   @Get('token/:id')
@@ -22,8 +32,8 @@ export class StudentsController {
     return await this.studentsService.findTokenById(id);
   }
 
-  @Delete('token/:id')
-  async deleteTokenById(@Param('id') id: string) {
-    return await this.studentsService.deleteTokenById(id);
+  @Post('token/:id')
+  async submitTokenById(@Param('id') id: number) {
+    return await this.studentsService.submitTokenById(id);
   }
 }

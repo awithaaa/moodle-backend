@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
@@ -78,10 +79,11 @@ model Student {
 }
 
 model StudentRegisterToken {
-  id String @id
+  id Int @id @default(autoincrement())
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
+  token String
   studentId Int?
-  onSubmit Boolean @default(false)
+  isSubmit Boolean @default(false)
   createdBy Int
 }
