@@ -13,6 +13,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { MailService } from 'src/utility/mail/mail.service';
 import { Console } from 'console';
+import { EditStudentDto } from './dto/edit-student.dto';
 
 @Injectable()
 export class StudentsService {
@@ -81,6 +82,86 @@ export class StudentsService {
     } catch (error) {
       console.log(error.message);
     }
+  }
+
+  async getAllStudent() {
+    return await this.prismaService.student.findMany({
+      select: {
+        id: true,
+        gender: true,
+        courseLevel: true,
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+    });
+  }
+
+  async getStudentById(id: number) {
+    const student = await this.prismaService.student.findUnique({
+      where: { id: id },
+      select: {
+        id: true,
+        address: true,
+        courseLevel: true,
+        createdAt: true,
+        createdBy: true,
+        dateOfBirth: true,
+        gender: true,
+        phoneNumber: true,
+        updatedAt: true,
+        user: {
+          select: {
+            email: true,
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    });
+    if (!student) throw new NotFoundException('Student does not found.');
+
+    return student;
+  }
+
+  async editStudentById(id: number, dto: EditStudentDto) {
+    const student = await this.prismaService.student.findUnique({
+      where: { id: id },
+    });
+    if (!student) throw new NotFoundException('Student does not found.');
+
+    const editStudent = await this.prismaService.student.update({
+      where: { id: id },
+      data: { ...dto },
+    });
+
+    return {
+      message: 'Student Edit Successfully!',
+    };
+  }
+
+  async deleteStudentById(id: number) {
+    const student = await this.prismaService.user.findUnique({
+      where: { id: id },
+    });
+    if (!student) throw new NotFoundException('Student does not found.');
+
+    await this.prismaService.user.update({
+      where: { id: id },
+      data: {
+        student: { delete: {} },
+      },
+      include: { student: true },
+    });
+
+    return {
+      message: 'User account and Student deleted successfully!',
+    };
   }
 
   async createStudentRegisterToken(createdBy: number) {
