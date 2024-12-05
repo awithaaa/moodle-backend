@@ -6,6 +6,7 @@ import {
 import { CreateUserDto } from './dto/user-create.dto';
 import { hash } from 'bcryptjs';
 import { UpdateUserDto } from './dto/updateUser.dto';
+import { UpdateUserByAdminDto } from './dto/update-user-admin.dto';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 
 @Injectable()
@@ -75,5 +76,42 @@ export class UserService {
     const { password, ...res } = updateUser;
 
     return res;
+  }
+
+  async updateUserById(id: number, dto: UpdateUserByAdminDto) {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!user) throw new NotFoundException('User not found!');
+
+    await this.prismaService.user.update({
+      where: { id: id },
+      data: { ...dto },
+    });
+
+    return {
+      message: 'User updated successfully!',
+    };
+  }
+
+  async deleteUserById(id: number) {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!user) throw new NotFoundException('User not found!');
+
+    await this.prismaService.user.delete({
+      where: { id: id },
+    });
+
+    return {
+      message: 'User deleted successfully',
+    };
   }
 }
