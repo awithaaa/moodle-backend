@@ -52,6 +52,16 @@ export class UserService {
       where: {
         id: id,
       },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+        student: { select: { id: true } },
+      },
     });
   }
 
