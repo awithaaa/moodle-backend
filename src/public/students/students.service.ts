@@ -92,6 +92,7 @@ export class StudentsService {
         courseLevel: true,
         user: {
           select: {
+            id: true,
             firstName: true,
             lastName: true,
             email: true,
