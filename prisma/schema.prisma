@@ -36,7 +36,13 @@ model Course {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   courseName String
+  level String
+  type String
+  time String
+  day String
+  duration String
   details Json?
+  createdBy Int
 
   UserCourse UserCourse[]
 }

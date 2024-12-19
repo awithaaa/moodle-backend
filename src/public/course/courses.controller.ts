@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
   Query,
@@ -30,6 +31,11 @@ export class CoursesController {
   @Post('add')
   async addCourse(@Body() dto: AddCourseDto) {
     return await this.courseService.addCourse(dto);
+  }
+
+  @Patch('edit/:id')
+  async editCourseById(@Body() dto: any, @Param('id') id: number) {
+    return await this.courseService.editCourseById(dto, id);
   }
 
   @Delete()
