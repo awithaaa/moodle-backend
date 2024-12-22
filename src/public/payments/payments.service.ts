@@ -1,7 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 import { AddPaymentDto } from './dto/addPayment.dto';
 import { UserService } from '../user/user.service';
+import { UpdatePaymentDto } from './dto/updatePayment.dto';
 
 @Injectable()
 export class PaymentsService {
@@ -37,7 +42,47 @@ export class PaymentsService {
   }
 
   async getAllPayments() {
-    return await this.prismaService.payment.findMany({});
+    return await this.prismaService.payment.findMany({
+      select: {
+        id: true,
+        courseId: true,
+        userId: true,
+        month: true,
+        paymentAmount: true,
+        createdAt: true,
+        user: {
+          select: {
+            student: { select: { id: true } },
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    });
+  }
+
+  async getPaymentById(id: number) {
+    const payment = await this.prismaService.payment.findUnique({
+      where: { id: id },
+      select: {
+        id: true,
+        courseId: true,
+        userId: true,
+        month: true,
+        paymentAmount: true,
+        createdAt: true,
+        user: {
+          select: {
+            student: { select: { id: true } },
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    });
+    if (!payment) throw new NotFoundException('Payment not found');
+
+    return payment;
   }
 
   async getLastPaymentByUserId(id: number, month: number) {
@@ -53,6 +98,23 @@ export class PaymentsService {
     });
     if (!payment) throw new NotFoundException('Payment not found!');
     return payment;
+  }
+
+  async editPaymentById(dto: UpdatePaymentDto, id: number) {
+    const payment = await this.prismaService.payment.findUnique({
+      where: { id: id },
+    });
+    if (!payment) throw new NotFoundException('Payment not found');
+
+    const updatedPayment = await this.prismaService.payment.update({
+      where: { id: id },
+      data: { ...dto },
+    });
+    if (!updatedPayment) throw new BadRequestException();
+
+    return {
+      message: 'Payment Updated Successfuly!',
+    };
   }
 
   async deletePaymentById(id: number) {

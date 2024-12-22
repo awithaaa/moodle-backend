@@ -1,7 +1,17 @@
-import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PaymentsService } from './payments.service';
 import { AddPaymentDto } from './dto/addPayment.dto';
+import { UpdatePaymentDto } from './dto/updatePayment.dto';
 
 @ApiTags('payments')
 @Controller('payments')
@@ -18,12 +28,25 @@ export class PaymentsController {
     return await this.paymentsService.getAllPayments();
   }
 
+  @Get(':id')
+  async getPaymentById(@Param('id') id: number) {
+    return await this.paymentsService.getPaymentById(id);
+  }
+
   @Get('user')
   async getLastPaymentByUserId(
     @Query('id') id: number,
     @Query('month') month: number,
   ) {
     return await this.paymentsService.getLastPaymentByUserId(id, month);
+  }
+
+  @Patch('edit/:id')
+  async editPaymentById(
+    @Param('id') id: number,
+    @Body() dto: UpdatePaymentDto,
+  ) {
+    return await this.paymentsService.editPaymentById(dto, id);
   }
 
   @Delete()
