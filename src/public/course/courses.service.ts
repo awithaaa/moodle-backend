@@ -7,6 +7,7 @@ import { PrismaService } from 'src/lib/prisma/prisma.service';
 import { AddCourseDto } from './dto/addCourse.dto';
 import { AddUserCourseDto } from './dto/addUserCourse.dto';
 import { retry } from 'rxjs';
+import { UpdateCourseDto } from './dto/updateCourse.dto';
 
 @Injectable()
 export class CoursesService {
@@ -48,6 +49,28 @@ export class CoursesService {
       },
       data: {
         details: dto,
+      },
+    });
+
+    if (!updateCourse) throw new BadRequestException();
+
+    return {
+      message: 'Course Updated Successfully!',
+    };
+  }
+
+  async editCourseDetailsById(dto: UpdateCourseDto, id: number) {
+    const course = await this.prismaService.course.findUnique({
+      where: { id: id },
+    });
+    if (!course) throw new NotFoundException('Course not found!');
+
+    const updateCourse = await this.prismaService.course.update({
+      where: {
+        id: id,
+      },
+      data: {
+        ...dto,
       },
     });
 

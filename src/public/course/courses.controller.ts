@@ -12,6 +12,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { CoursesService } from './courses.service';
 import { AddCourseDto } from './dto/addCourse.dto';
 import { AddUserCourseDto } from './dto/addUserCourse.dto';
+import { UpdateCourseDto } from './dto/updateCourse.dto';
 
 @ApiTags('courses')
 @Controller('courses')
@@ -36,6 +37,14 @@ export class CoursesController {
   @Patch('edit/:id')
   async editCourseById(@Body() dto: any, @Param('id') id: number) {
     return await this.courseService.editCourseById(dto, id);
+  }
+
+  @Patch('edit/details/:id')
+  async editCourseDetailsById(
+    @Body() dto: UpdateCourseDto,
+    @Param('id') id: number,
+  ) {
+    return await this.courseService.editCourseDetailsById(dto, id);
   }
 
   @Delete()
