@@ -108,6 +108,18 @@ export class CoursesService {
 
     return await this.prismaService.userCourse.findMany({
       where: { courseId: id },
+      select: {
+        id: true,
+        userId: true,
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+            role: true,
+          },
+        },
+      },
     });
   }
 
