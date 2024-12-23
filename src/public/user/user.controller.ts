@@ -8,6 +8,7 @@ import {
   Req,
   Request,
   UseGuards,
+  Post,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
@@ -39,12 +40,14 @@ export class UserController {
     return await this.userService.findAll();
   }
 
+  // Update endpoint by User
   @Patch()
   @UseGuards(JwtAuthGuard)
   async upateUser(@Body() dto: UpdateUserDto, @Req() req) {
     return await this.userService.updateUser(dto, req.user.username);
   }
 
+  // Update endpoint by admin
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
   async updateUserById(
@@ -58,5 +61,21 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   async deleteUserById(@Param('id') id: number) {
     return await this.userService.deleteUserById(id);
+  }
+
+  // Passkey
+  @Post('passkey/token')
+  async generatePassToken(@Body() dto: any) {
+    return await this.userService.generatePassToken(dto);
+  }
+
+  @Get('passkey/:token')
+  async getPassToken(@Param('token') token: string) {
+    return await this.userService.getPassToken(token);
+  }
+
+  @Patch('passkey/change/:token')
+  async changePassByToken(@Param('token') token: string, @Body() dto: any) {
+    return await this.userService.changePassByToken(token, dto);
   }
 }

@@ -93,3 +93,13 @@ model StudentRegisterToken {
   isSubmit Boolean @default(false)
   createdBy Int
 }
+
+model UserPasswordToken {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  token String @unique
+  email String
+  expiresIn Int
+  isSubmit Boolean @default(false)
+}
