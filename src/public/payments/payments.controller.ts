@@ -33,10 +33,10 @@ export class PaymentsController {
     return await this.paymentsService.getPaymentById(id);
   }
 
-  @Get('user')
+  @Get('user/:id/:month')
   async getLastPaymentByUserId(
-    @Query('id') id: number,
-    @Query('month') month: number,
+    @Param('id') id: number,
+    @Param('month') month: number,
   ) {
     return await this.paymentsService.getLastPaymentByUserId(id, month);
   }
