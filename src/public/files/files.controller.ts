@@ -39,6 +39,6 @@ export class FilesController {
 
   @Get('list')
   async listFiles() {
-    return await this.googleDriveService.listFiles();
+    return await this.filesService.getAllFiles();
   }
 }

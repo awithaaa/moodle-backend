@@ -43,4 +43,9 @@ export class FilesService {
       message: 'File deleted Successfully!',
     };
   }
+
+  // Get file list
+  async getAllFiles() {
+    return await this.prismaService.file.findMany({});
+  }
 }
