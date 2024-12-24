@@ -3,9 +3,10 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/user-create.dto';
-import { hash } from 'bcryptjs';
+import { hash, compare } from 'bcryptjs';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { UpdateUserByAdminDto } from './dto/update-user-admin.dto';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
@@ -80,12 +81,42 @@ export class UserService {
     if (!user) throw new NotFoundException('User not found!');
 
     if (dto.password) {
-      dto.password = await hash(dto.password, 10);
+      return await this.updatePassword(dto.password, dto.currentPass, email);
     }
 
     const updateUser = await this.prismaService.user.update({
       where: { email: email },
       data: { ...dto },
+    });
+
+    const { password, ...res } = updateUser;
+
+    return res;
+  }
+
+  private async updatePassword(
+    pass: string,
+    currentPass: string,
+    email: string,
+  ) {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    if (!user) throw new NotFoundException('User not found!');
+
+    const authenticated = await compare(currentPass, user.password);
+    if (!authenticated) {
+      throw new BadRequestException("Your Current Password doesn't match");
+    }
+
+    const passkey = await hash(pass, 10);
+
+    const updateUser = await this.prismaService.user.update({
+      where: { email: email },
+      data: { password: passkey },
     });
 
     const { password, ...res } = updateUser;

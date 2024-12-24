@@ -64,6 +64,11 @@ export class CoursesController {
     return await this.courseService.getAllUsersInCourse(courseId);
   }
 
+  @Get('user/:id')
+  async getCoursesByUserId(@Param('id') id: number) {
+    return await this.courseService.getCoursesByUserId(id);
+  }
+
   @Delete('user')
   async deleteUserFromCourseById(@Query('id') id: number) {
     return await this.courseService.deleteUserFromCourseById(id);

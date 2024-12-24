@@ -8,6 +8,10 @@ export class UpdateUserDto extends Dto<UpdateUserDto> {
 
   @IsString()
   @IsOptional()
+  currentPass?: string;
+
+  @IsString()
+  @IsOptional()
   firstName?: string;
 
   @IsString()

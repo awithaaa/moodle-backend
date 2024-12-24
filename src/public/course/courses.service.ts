@@ -146,6 +146,21 @@ export class CoursesService {
     });
   }
 
+  async getCoursesByUserId(id: number) {
+    const courses = await this.prismaService.userCourse.findMany({
+      where: { userId: id },
+      select: {
+        course: {
+          select: {
+            courseName: true,
+          },
+        },
+      },
+    });
+
+    return courses;
+  }
+
   async deleteUserFromCourseById(id: number) {
     const userCourse = await this.prismaService.userCourse.findUnique({
       where: { id: id },
