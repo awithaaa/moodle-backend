@@ -85,7 +85,7 @@ export class PaymentsService {
     return payment;
   }
 
-  async getLastPaymentByUserId(id: number, month: number) {
+  async getLastPaymentByUserId(id: number, cid: number, month: number) {
     // Find User
     const user = await this.userService.findById(id);
     if (!user) throw new NotFoundException('User not found!');
@@ -93,6 +93,7 @@ export class PaymentsService {
     const payment = await this.prismaService.payment.findFirst({
       where: {
         userId: id,
+        courseId: cid,
         month: month,
       },
     });
