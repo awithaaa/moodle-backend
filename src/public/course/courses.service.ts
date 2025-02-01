@@ -152,6 +152,7 @@ export class CoursesService {
       select: {
         course: {
           select: {
+            id: true,
             courseName: true,
           },
         },
@@ -159,6 +160,24 @@ export class CoursesService {
     });
 
     return courses;
+  }
+
+  async findCourseByUserId(id: number, cid: number) {
+    const courses = await this.prismaService.userCourse.findMany({
+      where: { courseId: cid, userId: id },
+      select: {
+        course: {
+          select: {
+            id: true,
+            courseName: true,
+          },
+        },
+      },
+    });
+
+    if (!courses[0]) throw new NotFoundException('UserCourse not found!');
+
+    return courses[0];
   }
 
   async deleteUserFromCourseById(id: number) {
